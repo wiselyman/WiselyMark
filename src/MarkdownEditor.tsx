@@ -90,8 +90,21 @@ function App() {
   return (
     <div>
       <h1>Markdown Editor</h1>
+      <textarea
+  value={markdown}
+  onChange={(e) => setMarkdown(e.target.value)}
+  style={{ width: '100%', height: '200px' }}
+/>
       <MDXEditor
         markdown={markdown} // 确保 markdown 状态被正确传递
+        onChange={(content) => {
+          console.log("-----------------------------------")
+          console.log("MDXEditor content changed:", content);
+          setMarkdown(content);
+        }}
+        onError={(error) => {
+          console.error("MDXEditor error:", error);
+        }}
         plugins={[
           headingsPlugin(),
           listsPlugin(),
