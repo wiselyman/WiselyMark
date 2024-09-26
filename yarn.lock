@@ -1584,6 +1584,11 @@
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.6.0.tgz#745b7e4e26782c3b2ad9510d558fa5bb2cf29186"
   integrity sha512-rqI++FWClU5I2UBp4HXFvl+sBWkdigBkxnpJDQUWttNyG7IZP4FwQGhTNL5EOw0vI8i6eSAJ5frLqO7n7jbJdg==
 
+"@tauri-apps/api@^2.0.0-rc.4":
+  version "2.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-2.0.0-rc.5.tgz#9e790680f5cf691b0ae4c25c4de6696f340df401"
+  integrity sha512-JWs69pE9NsQdcqTpEVBepAZ08+jgQWuthIiTiaWRq/YlCLgnqq0KfC9sDem55uJ0YpgsytZuyj+m6b6q8oiD2g==
+
 "@tauri-apps/cli-darwin-arm64@1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli-darwin-arm64/-/cli-darwin-arm64-1.6.2.tgz#f2a4090898677282ca5075605f489ac37b4eb241"
@@ -1649,6 +1654,13 @@
     "@tauri-apps/cli-win32-arm64-msvc" "1.6.2"
     "@tauri-apps/cli-win32-ia32-msvc" "1.6.2"
     "@tauri-apps/cli-win32-x64-msvc" "1.6.2"
+
+"@tauri-apps/plugin-dialog@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/plugin-dialog/-/plugin-dialog-2.0.0-rc.1.tgz#a3b0fd51a547e796ff93c58172fad48ad61a9970"
+  integrity sha512-H28gh6BfZtjflHQ+HrmWwunDriBI3AQLAKnMs50GA6zeNUULqbQr7VXbAAKeJL/0CmWcecID4PKXVoSlaWRhEg==
+  dependencies:
+    "@tauri-apps/api" "^2.0.0-rc.4"
 
 "@types/acorn@^4.0.0":
   version "4.0.6"
@@ -1720,6 +1732,11 @@
   integrity sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==
   dependencies:
     "@types/unist" "*"
+
+"@types/lodash@^4.17.9":
+  version "4.17.9"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.9.tgz#0dc4902c229f6b8e2ac5456522104d7b1a230290"
+  integrity sha512-w9iWudx1XWOHW5lQRS9iKpK/XuRhnN+0T7HvdCCd802FYkT1AMTnxndJHGrNJwRoRHkslGr4S29tjm1cT7x/7w==
 
 "@types/mdast@^4.0.0":
   version "4.0.4"
@@ -2212,6 +2229,11 @@ lexical@0.17.1, lexical@^0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/lexical/-/lexical-0.17.1.tgz#02f4057b82cb302ceb9ca9b031dcf9406be5780a"
   integrity sha512-72/MhR7jqmyqD10bmJw8gztlCm4KDDT+TPtU4elqXrEvHoO5XENi34YAEUD9gIkPfqSwyLa9mwAX1nKzIr5xEA==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 longest-streak@^3.0.0:
   version "3.1.0"

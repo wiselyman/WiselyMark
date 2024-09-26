@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   MDXEditor,
   headingsPlugin,
@@ -13,11 +13,14 @@ import {
   tablePlugin,
   sandpackPlugin,
   codeMirrorPlugin,
-  SandpackConfig
+  SandpackConfig,
+  MDXEditorMethods
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import { dialog, fs } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
+import { writeTextFile } from '@tauri-apps/api/fs';
+import { debounce } from 'lodash'; 
 
 const defaultSnippetContent = `
 export default function App() {
@@ -48,6 +51,24 @@ const reactSandpackConfig: SandpackConfig = {
 
 function App() {
   const [markdown, setMarkdown] = useState<string>('# Hello World');
+  const [filePath, setFilePath] = useState<string | null>(null);
+  const editorRef = useRef<MDXEditorMethods>(null);
+  const saveFile = async (content: string) => {
+    try {
+      await writeTextFile(filePath!, content);
+      console.log('File saved successfully');
+
+      setSaveNotification(true);
+      setTimeout(() => setSaveNotification(false), 5000);
+        
+      
+    } catch (error) {
+      console.error('Failed to save file', error);
+    }
+  };
+  const debouncedSave = debounce(saveFile, 1000); // 1秒后自动保存
+  const [saveNotification, setSaveNotification] = useState(false);
+
 
   // 选择文件并读取内容的函数
   const selectFile = async () => {
@@ -58,12 +79,9 @@ function App() {
 
       if (selected && typeof selected === 'string') {
         const fileContent = await fs.readTextFile(selected);
-        
-        // 打印读取的文件内容
-        console.log("File Content Read: ", fileContent);
-
         // 设置 Markdown 内容到编辑器中
         setMarkdown(fileContent);
+        setFilePath(selected);
       }
     } catch (error) {
       console.error('Failed to read file', error);
@@ -82,23 +100,41 @@ function App() {
     };
   }, []);
 
-  // 当 markdown 状态变化时，打印其新值
   useEffect(() => {
-    console.log("Markdown State Updated: ", markdown);
+    if (editorRef.current) {
+      editorRef.current.setMarkdown(markdown);
+    }
   }, [markdown]);
 
+  useEffect(() => {
+    if (markdown && filePath) {
+      debouncedSave(markdown);
+    }
+  }, [markdown]);
+
+
+
   return (
-    <div>
-      <h1>Markdown Editor</h1>
-      <textarea
-  value={markdown}
-  onChange={(e) => setMarkdown(e.target.value)}
-  style={{ width: '100%', height: '200px' }}
-/>
+    <div style={{marginLeft: '100px', marginRight: '100px'}}>
+      {saveNotification && (
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: 'rgba(0, 128, 0, 0.8)',
+        color: 'white',
+        padding: '10px',
+        borderRadius: '5px',
+        transition: 'opacity 0.5s',
+        opacity: saveNotification ? 1 : 0,
+      }}>
+        已自动保存
+      </div>
+    )}
       <MDXEditor
+        ref={editorRef}
         markdown={markdown} // 确保 markdown 状态被正确传递
         onChange={(content) => {
-          console.log("-----------------------------------")
           console.log("MDXEditor content changed:", content);
           setMarkdown(content);
         }}
@@ -117,7 +153,7 @@ function App() {
           linkPlugin(),
           linkDialogPlugin(),
           tablePlugin(),
-          markdownShortcutPlugin()
+          markdownShortcutPlugin({unorderedListCommand: '-'})
         ]}
       />
     </div>
