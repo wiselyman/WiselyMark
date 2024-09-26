@@ -153,7 +153,7 @@ function App() {
           linkPlugin(),
           linkDialogPlugin(),
           tablePlugin(),
-          markdownShortcutPlugin({unorderedListCommand: '-'})
+          markdownShortcutPlugin()
         ]}
       />
     </div>
