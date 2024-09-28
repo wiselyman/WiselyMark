@@ -112,7 +112,35 @@ function App() {
     }
   }, [markdown]);
 
+  const createNewFile = async () => {
+    const newFileName = `default.md`;
+    const newFilePath = await dialog.save({
+      filters: [{ name: 'Markdown', extensions: ['md'] }],
+      defaultPath: newFileName
+    });
 
+    if (newFilePath) {
+      const initialContent = '# New Markdown File\n\nStart writing here...';
+      await writeTextFile(newFilePath, initialContent);
+      setMarkdown(initialContent);
+      setFilePath(newFilePath);
+    }
+  };
+
+  useEffect(() => {
+    const unlistenOpenFile = listen('menu-open-file', () => {
+      selectFile();
+    });
+
+    const unlistenNewFile = listen('menu-new-file', () => {
+      createNewFile();
+    });
+
+    return () => {
+      unlistenOpenFile.then(fn => fn());
+      unlistenNewFile.then(fn => fn());
+    };
+  }, []);
 
   return (
     <div style={{marginLeft: '100px', marginRight: '100px'}}>

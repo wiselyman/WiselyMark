@@ -28,7 +28,8 @@
         "removeFile": true
       },
       "dialog": {
-        "open": true
+        "open": true,
+        "save": true
       }
     },
     "windows": [
