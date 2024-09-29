@@ -50,6 +50,31 @@ const reactSandpackConfig: SandpackConfig = {
   };
 
 function App() {
+  const supportedLanguages = {
+    text: 'Plain Text',
+    js: 'JavaScript',
+    jsx: 'JavaScript JSX',
+    ts: 'TypeScript',
+    tsx: 'TypeScript JSX',
+    python: 'Python',
+    java: 'Java',
+    cpp: 'C++',
+    cs: 'C#',
+    ruby: 'Ruby',
+    php: 'PHP',
+    go: 'Go',
+    rust: 'Rust',
+    swift: 'Swift',
+    kotlin: 'Kotlin',
+    html: 'HTML',
+    css: 'CSS',
+    json: 'JSON',
+    yaml: 'YAML',
+    markdown: 'Markdown',
+    sql: 'SQL',
+    bash: 'Bash',
+    powershell: 'PowerShell'
+  };
   const [markdown, setMarkdown] = useState<string>('# Hello World');
   const [filePath, setFilePath] = useState<string | null>(null);
   const editorRef = useRef<MDXEditorMethods>(null);
@@ -88,17 +113,6 @@ function App() {
     }
   };
 
-  // 监听从系统菜单发送的事件
-  useEffect(() => {
-    const unlisten = listen('menu-open-file', () => {
-      selectFile(); // 当菜单项被点击时，调用选择文件的函数
-    });
-
-    // 清理事件监听器
-    return () => {
-      unlisten.then((dispose) => dispose());
-    };
-  }, []);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -174,9 +188,9 @@ function App() {
           listsPlugin(),
           quotePlugin(),
           thematicBreakPlugin(),
-          codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
-          sandpackPlugin({ sandpackConfig: reactSandpackConfig }),
-          codeMirrorPlugin({ codeBlockLanguages: { java: 'Java', js: 'JavaScript', css: 'CSS' } }),
+          codeBlockPlugin({defaultCodeBlockLanguage: 'text'}),
+          sandpackPlugin({ sandpackConfig: reactSandpackConfig}),
+          codeMirrorPlugin({ codeBlockLanguages: supportedLanguages}),
           imagePlugin(),
           linkPlugin(),
           linkDialogPlugin(),
