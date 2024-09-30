@@ -37,7 +37,8 @@ fn main() {
             let window_clone = window.clone();
 
             // 处理文件拖放事件
-            app.listen_global("tauri://file-drop", move |event| {
+            window.listen_global("tauri://file-drop", move |event| {
+                println!("File dropped: {:?}", event.payload());
                 let window = window_clone.clone(); // 克隆到新的闭包内
                 if let Some(payload) = event.payload() {
                     if let Ok(paths) = serde_json::from_str::<Vec<String>>(payload) {
@@ -86,7 +87,11 @@ fn main() {
                                 "content": content,
                                 "path": path
                             })).unwrap();
+                        } else {
+                            println!("无法读取文件: {}", path);
                         }
+                    } else {
+                        println!("没有收到文件路径");
                     }
                 });
             }

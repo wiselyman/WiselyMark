@@ -32,9 +32,11 @@
     },
     "windows": [
       {
-        "title": "wiselymark",
+        "title": "WiselyMark",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "fileDropEnabled": true,
+        "transparent": false
       }
     ],
    

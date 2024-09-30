@@ -166,6 +166,7 @@ function App() {
 
     const unlistenFileOpened = listen('file-opened', (event) => {
       const { content, path } = event.payload as { content: string; path: string };
+      console.log('文件已打开:', path);
       setMarkdown(content);
       setFilePath(path);
     });

@@ -10,9 +10,16 @@
             <key>CFBundleTypeExtensions</key>
             <array>
                 <string>md</string>
-                <string>markdown</string> </array>
+                <string>markdown</string>
+            </array>
             <key>CFBundleTypeRole</key>
-            <string>Viewer</string>
+            <string>Editor</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>net.daringfireball.markdown</string>
+            </array>
+            <key>LSTypeIsPackage</key>
+            <false/>
         </dict>
     </array>
 </dict>
