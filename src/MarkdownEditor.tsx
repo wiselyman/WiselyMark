@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   MDXEditor,
   headingsPlugin,
@@ -34,20 +34,20 @@ export default function App() {
 `.trim();
 
 const reactSandpackConfig: SandpackConfig = {
-    defaultPreset: "react",
-    presets: [
-      {
-        label: "React",
-        name: "react",
-        meta: "live",
-        sandpackTemplate: "react",
-        sandpackTheme: "light",
-        snippetFileName: "/App.js",
-        snippetLanguage: "jsx",
-        initialSnippetContent: defaultSnippetContent,
-      },
-    ],
-  };
+  defaultPreset: "react",
+  presets: [
+    {
+      label: "React",
+      name: "react",
+      meta: "live",
+      sandpackTemplate: "react",
+      sandpackTheme: "light",
+      snippetFileName: "/App.js",
+      snippetLanguage: "jsx",
+      initialSnippetContent: defaultSnippetContent,
+    },
+  ],
+};
 
 function App() {
   const supportedLanguages = {
@@ -78,22 +78,33 @@ function App() {
   const [markdown, setMarkdown] = useState<string>('# Hello World');
   const [filePath, setFilePath] = useState<string | null>(null);
   const editorRef = useRef<MDXEditorMethods>(null);
+  const [saveNotification, setSaveNotification] = useState(false);
+
   const saveFile = async (content: string) => {
+    if (!filePath) {
+      // 如果没有文件路径，提示用户选择保存位置
+      const selectedPath = await dialog.save({
+        filters: [{ name: 'Markdown', extensions: ['md', 'markdown'] }]
+      });
+      if (selectedPath) {
+        setFilePath(selectedPath);
+      } else {
+        // 用户取消了保存操作
+        return;
+      }
+    }
+
     try {
       await writeTextFile(filePath!, content);
       console.log('File saved successfully');
 
       setSaveNotification(true);
       setTimeout(() => setSaveNotification(false), 5000);
-        
-      
     } catch (error) {
       console.error('Failed to save file', error);
     }
   };
   const debouncedSave = debounce(saveFile, 1000); // 1秒后自动保存
-  const [saveNotification, setSaveNotification] = useState(false);
-
 
   // 选择文件并读取内容的函数
   const selectFile = async () => {
@@ -113,7 +124,6 @@ function App() {
     }
   };
 
-
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.setMarkdown(markdown);
@@ -124,7 +134,7 @@ function App() {
     if (markdown && filePath) {
       debouncedSave(markdown);
     }
-  }, [markdown]);
+  }, [markdown, filePath]); // 确保当 filePath 变化时也会触发
 
   const createNewFile = async () => {
     const newFileName = `default.md`;
@@ -138,6 +148,10 @@ function App() {
       await writeTextFile(newFilePath, initialContent);
       setMarkdown(initialContent);
       setFilePath(newFilePath);
+    } else {
+      // 用户取消了保存操作
+      setMarkdown('# New Markdown File\n\nStart writing here...');
+      setFilePath(null);
     }
   };
 
@@ -150,29 +164,36 @@ function App() {
       createNewFile();
     });
 
+    const unlistenFileOpened = listen('file-opened', (event) => {
+      const { content, path } = event.payload as { content: string; path: string };
+      setMarkdown(content);
+      setFilePath(path);
+    });
+
     return () => {
       unlistenOpenFile.then(fn => fn());
       unlistenNewFile.then(fn => fn());
+      unlistenFileOpened.then(fn => fn());
     };
   }, []);
 
   return (
-    <div style={{marginLeft: '100px', marginRight: '100px'}}>
+    <div style={{ marginLeft: '100px', marginRight: '100px' }}>
       {saveNotification && (
-      <div style={{
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: 'rgba(0, 128, 0, 0.8)',
-        color: 'white',
-        padding: '10px',
-        borderRadius: '5px',
-        transition: 'opacity 0.5s',
-        opacity: saveNotification ? 1 : 0,
-      }}>
-        已自动保存
-      </div>
-    )}
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: 'rgba(0, 128, 0, 0.8)',
+          color: 'white',
+          padding: '10px',
+          borderRadius: '5px',
+          transition: 'opacity 0.5s',
+          opacity: saveNotification ? 1 : 0,
+        }}>
+          已自动保存
+        </div>
+      )}
       <MDXEditor
         ref={editorRef}
         markdown={markdown} // 确保 markdown 状态被正确传递
@@ -188,9 +209,9 @@ function App() {
           listsPlugin(),
           quotePlugin(),
           thematicBreakPlugin(),
-          codeBlockPlugin({defaultCodeBlockLanguage: 'text'}),
-          sandpackPlugin({ sandpackConfig: reactSandpackConfig}),
-          codeMirrorPlugin({ codeBlockLanguages: supportedLanguages}),
+          codeBlockPlugin({ defaultCodeBlockLanguage: 'text' }),
+          sandpackPlugin({ sandpackConfig: reactSandpackConfig }),
+          codeMirrorPlugin({ codeBlockLanguages: supportedLanguages }),
           imagePlugin(),
           linkPlugin(),
           linkDialogPlugin(),
